@@ -1,185 +1,215 @@
-# Neon Band
+<div align="center">
 
-A band in a neon-lit room: guitar, bass, drums, piano and violin. Play each one by hand,
-build loops for them, and stack the loops into a song. Every sound is synthesized live in
-the browser (no sample files), tuned to exact equal temperament (A4 = 440 Hz).
+# 🎸 Neon Band
 
-## Run it
+### A full band in your browser. Five instruments, real music theory, zero samples.
 
-You need [Node.js](https://nodejs.org) 18 or newer.
+Play guitar, bass, drums, piano and violin by hand, build loops for each one,<br/>
+and stack them into a song — all in a neon-lit room, all synthesized live in code.
 
-```bash
-npm install
-npm run dev          # opens a local dev server with hot reload
+<br/>
+
+[![▶ Play it live](https://img.shields.io/badge/▶_PLAY_IT_LIVE-ff3d9a?style=for-the-badge&logoColor=white)](https://nancyaanchal.github.io/Neon-Band/)
+
+<br/>
+
+[![Deploy](https://github.com/NancyAanchal/neon-band/actions/workflows/deploy.yml/badge.svg)](https://github.com/NancyAanchal/neon-band/actions/workflows/deploy.yml)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)
+![Web Audio API](https://img.shields.io/badge/Web_Audio-API-2ee6ff)
+![Runtime dependencies](https://img.shields.io/badge/runtime_dependencies-0-3dffb4)
+![Audio samples](https://img.shields.io/badge/audio_samples-0-ffb22e)
+
+<br/>
+
+<img src="docs/screenshots/band.gif" alt="The full band playing in the neon room, each instrument glowing with its own loudness" width="100%"/>
+
+<sub>Every instrument glows with its <b>real</b> audio level. The back wall is a live spectrum analyser.</sub>
+
+</div>
+
+<br/>
+
+## ✨ Why it's cool
+
+- 🎼 **Pitch-perfect by math, not samples.** Every note is computed in equal temperament (A4 = 440 Hz). Guitar strings are measured within **0.28 cents** of perfect pitch; you can't hear under ~5.
+- 🎸 **Every chord, every key.** 16 chord types × 12 keys = **192 chords**, and the guitar finds a real, playable fingering for every one of them, with a working **capo**.
+- 🥁 **Tight as a studio clock.** A lookahead scheduler books every note ahead of time at sample-accurate audio times, so five instruments stay locked together even when the UI is busy.
+- 🔁 **Loops land on the beat.** Send a loop to the band mid-song and it waits for the next bar line, so it always comes in on beat one.
+- 🎹 **Plays like the real thing.** Strums ring string by string. Pianos voice-lead smoothly between chords. The violin is fretless: slide your finger and the pitch slides with you, with a live tuner.
+- 🧩 **Built to grow.** Adding an instrument is one folder plus one line. Every song change is a plain serializable action, ready for multiplayer.
+- 📦 **Tiny.** No frameworks, no runtime dependencies, no audio files. The whole game ships as ~33 KB of gzipped JavaScript.
+
+<br/>
+
+## 🎛️ The band
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/guitar.png" alt="Guitar: a chord shape glowing on the fretboard with a capo on fret 2"/></td>
+    <td width="50%"><img src="docs/screenshots/drums.png" alt="Drums: a clickable kit beside a 16-step sequencer"/></td>
+  </tr>
+  <tr>
+    <td><b>🎸 Guitar</b> — pick frets, drag to strum, capo 0–12, acoustic or overdrive, 10 strumming patterns + your own.</td>
+    <td><b>🥁 Drums</b> — 11 synthesized voices, 12 grooves, a full 16-step sequencer and automatic tom fills.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/piano.png" alt="Piano: three octaves with keys lighting up in cyan"/></td>
+    <td><img src="docs/screenshots/violin.png" alt="Violin: a fretless fingerboard with a live tuner reading A4, 440 Hz, in tune"/></td>
+  </tr>
+  <tr>
+    <td><b>🎹 Piano</b> — 3 octaves, mouse glissando, computer-keyboard play, sustain pedal, 8 comping styles.</td>
+    <td><b>🎻 Violin</b> — fretless strings, bow or pluck, vibrato, pitch snap, live tuner, generated melodies.</td>
+  </tr>
+</table>
+
+Plus a **🎸 Bass** with finger and pick tones and 9 grooves, including a walking line that leads chromatically into the next chord.
+
+<br/>
+
+## 🔁 Build a song in four moves
+
+<img src="docs/screenshots/guitar-loop.png" alt="The loop builder: chord progression chips, preset progressions and a chord pad" width="100%"/>
+
+1. **Open an instrument.** Click it in the room; the view zooms in.
+2. **Build its loop.** Pick chords (or a famous progression like I–V–vi–IV, the 12-bar blues or Canon), then a strumming pattern, groove or style.
+3. **Press Enter.** The loop joins the band on the next bar and you're back in the room.
+4. **Repeat.** Stack all five. Edit any loop while it plays and hear the change instantly.
+
+Use **Copy chords from…** to make the whole band follow one progression in seconds.
+
+<br/>
+
+## 🧠 How it sounds real
+
+No recordings. Each instrument uses the synthesis method that matches how the real one makes sound:
+
+| Instrument | Technique |
+| --- | --- |
+| **Guitar & bass** | Karplus-Strong plucked string with an **all-pass fractional delay**, so tuning is exact instead of ~20 cents flat on high notes. Pick-position comb filtering, body-resonance EQ, optional tube-style overdrive. |
+| **Piano** | Additive synthesis: up to 16 partials with real **string inharmonicity**, two detuned strings per note for natural chorus, two-stage decay and a felt-hammer thump. |
+| **Violin** | Real-time bowed string: detuned sawtooths through violin **body resonances** (280 / 470 / 2700 Hz), delayed vibrato and rosin noise. Pitch glides continuously. |
+| **Drums** | Pitch-swept sines for kick and toms, noise + body for snare, six inharmonic square waves for 808-style cymbals, multi-burst clap. Closed hats choke open hats. |
+
+Everything runs through a mixer with per-instrument panning, a convolution reverb, a bus compressor and a limiter.
+
+<br/>
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph State["State: every change is an action"]
+        UI[UI controls] --> D[dispatch] --> R[Store reducer] --> E[Change event] --> S[Mixer · autosave · screens]
+    end
+    subgraph Sound["Sound: scheduled ahead at exact audio times"]
+        T[Transport<br/>every 16th note] --> O[App.onStep] --> I[instrument.scheduleStep] --> V[Synth voice] --> M[Mixer → speakers]
+    end
+    R -. loop data .-> I
+    I -. "show(time)" .-> L[Lights fire when the note is heard]
 ```
 
-Other commands:
+- **One source of truth.** The whole song is one JSON object. Every change is a plain `Action` through `store.dispatch()` and a pure reducer.
+- **The clock drives the music.** The transport wakes every 25 ms and schedules the next 120 ms with sample-accurate timing ("A Tale of Two Clocks").
+- **Visuals follow sound.** Notes are booked ahead, so lights are queued to fire exactly when each note becomes audible.
+- **Instruments are plugins.** The room, mixer, loop system and save files all discover instruments from one registry.
+
+<br/>
+
+## 🚀 Quick start
+
+```bash
+git clone https://github.com/NancyAanchal/neon-band.git
+cd neon-band
+npm install
+npm run dev
+```
 
 | Command | What it does |
 | --- | --- |
-| `npm run build` | Production build in `dist/` (host it on any static site host) |
-| `npm run build:single` | One self-contained `dist-single/index.html` you can share or double-click |
-| `npm run typecheck` | Check types without building |
+| `npm run dev` | Dev server with hot reload |
+| `npm run build` | Type-check + production build in `dist/` |
+| `npm run build:single` | The whole game as **one** self-contained HTML file |
+| `npm run typecheck` | Strict type-check only |
 
-## How to play
+Every push to `main` deploys to GitHub Pages automatically via `.github/workflows/deploy.yml`.
 
-- **Room:** click an instrument to walk up to it. `Space` plays/stops the band, `1`–`5` open instruments.
-- **Instrument screen:** play the big instrument in the middle. The sidebar has two tabs:
-  - **Play** – chord buttons, sounds and settings (capo, tone, sustain…)
-  - **Loop builder** – chords, pattern and style for the loop. Press **Enter** (or "Send to the band")
-    and the loop starts on the next bar while you go back to the room.
-- Editing a loop that is already playing changes it live.
-- `1`–`7` play the seven chords of the current key on any chord instrument. `Esc` goes back.
-- **Song** button: copy, download or load your song as JSON. It also autosaves in the browser.
+<br/>
 
-| Instrument | Hands-on controls |
+## ⌨️ Controls
+
+| Where | Keys |
 | --- | --- |
-| Guitar | Click frets to pick, drag across the round area to strum, `↓`/`Space` down strum, `↑` up strum |
-| Bass | Click or drag along the strings |
-| Drums | Click pieces, or keys: `B` kick, `S` snare, `H` hat, `J` open hat, `T` `Y` `U` toms, `K` crash, `L` ride, `R` rim, `C` clap |
-| Piano | Click or glide across keys, `A`…`'` play notes, `Z`/`X` octave, hold `Space` for sustain |
-| Violin | Hold a string to bow, slide to change pitch, `A`…`'` play notes |
+| Room | `Space` play/stop · `1`–`5` open an instrument |
+| Any instrument | `1`–`7` chords of the key · `Enter` send loop · `Esc` back |
+| Guitar | `↓` / `Space` strum down · `↑` strum up |
+| Piano | `A W S E D F T G Y H U J K O L P ; '` notes · `Z` / `X` octave · hold `Space` sustain |
+| Drums | `B` kick · `S` snare · `H` hat · `J` open hat · `T` `Y` `U` toms · `K` crash · `L` ride · `R` rim · `C` clap |
+| Violin | `A` … `'` notes, held while pressed |
 
-## Project layout
+<br/>
+
+## 📁 Project structure
 
 ```
 src/
-  main.ts                 entry point
-  app/
-    App.ts                wires everything: audio, transport, store, screens, keyboard
-    song.ts               default song, merging old saves, autosave
-  core/
-    Store.ts              song state + reducer + middleware (the multiplayer hook)
-    types.ts              SongState, InstrumentState and every Action
-    EventBus.ts           tiny typed pub/sub
-  audio/
-    AudioEngine.ts        AudioContext, mixer channels, reverb, master bus
-    Transport.ts          lookahead scheduler, 16th-note steps
-    synth/
-      pluck.ts            Karplus-Strong strings with fractional tuning (guitar, bass, pizzicato)
-      piano.ts            additive piano with inharmonic partials
-      bowed.ts            real-time bowed string (violin)
-      drums.ts            all drum voices
-      voice.ts            buffer playback + lazy render cache
-  music/
-    theory.ts             notes, frequencies, scales, keys
-    chords.ts             chord types, diatonic chords, progressions, voicings
-    guitarShapes.ts       chord shapes: hand-picked + automatic search
-  instruments/
-    Instrument.ts         base class every instrument extends
-    ChordInstrument.ts    base for instruments that follow chords
-    registry.ts           the band (add instruments here)
-    shared/               Fretboard and KeyboardView components
-    guitar/ bass/ piano/ drums/ violin/
-  ui/
-    dom.ts                h() element helper, Disposer
-    components/           ChordPad, ProgressionEditor, StepGrid, TransportBar, controls
-    screens/              Splash, RoomScreen, InstrumentScreen
-  styles/main.css         all styles; theme tokens at the top
+├── app/            App wiring, screen routing, autosave
+├── core/           Store, actions, typed event bus
+├── audio/          Mixer, lookahead transport
+│   └── synth/      pluck · piano · bowed · drums
+├── music/          Theory, chords, progressions, guitar shape engine
+├── instruments/    guitar · bass · drums · piano · violin · shared views
+├── ui/             DOM helpers, components, screens
+└── styles/         One CSS file, theme tokens up top
 ```
 
-## How it fits together
+<br/>
 
-```
-Transport (every 16th note) ──► App.onStep ──► instrument.scheduleStep(localStep, time)
-                                                     │
-UI clicks ──► store.dispatch(action) ──► reducer     ▼
-                    │                            synth ──► Channel ──► master ──► speakers
-                    └─► change event ──► screens re-render, mixer updates, autosave
-```
+## 🧩 Add your own instrument
 
-- **One source of truth.** The whole song is a plain JSON object (`SongState`). Every change
-  is an `Action` sent through `store.dispatch`. Nothing else mutates song data.
-- **Timing.** `Transport` wakes up every 25 ms and schedules everything in the next ~120 ms at
-  exact AudioContext times, so the band stays tight even when the UI is busy.
-- **Visuals follow sound.** Instruments call `this.show(time, 'hit', …)`; the event fires when
-  that sound is actually heard, so lights match the audio.
-- **Loops start on bar lines.** Each instrument stores the global step where its loop began
-  (`startStep`), so loops added mid-song land on the downbeat.
-
-## Common edits
-
-**Colours and fonts:** tokens at the top of `src/styles/main.css`. Each instrument's neon
-colour is its `color` field.
-
-**Add a chord type:** one line in `CHORD_TYPES` (`src/music/chords.ts`). Every instrument can
-play it; the guitar finds a shape automatically. Add a preferred shape to `KNOWN_SHAPES` in
-`guitarShapes.ts` if you like.
-
-**Add a chord progression:** add to `PROGRESSION_PRESETS` in `chords.ts`
-(scale degrees are 0-based: 0 = I, 4 = V).
-
-**Add a strumming pattern:** `src/instruments/guitar/strumPatterns.ts`. A pattern is 16
-characters, one per 16th note: `D` down, `U` up, `s` short, `x` mute, `B` bass note,
-`A` alternate bass, `1`–`6` single strings, `-` rest.
-
-**Add a drum groove:** `GROOVES` in `src/instruments/drums/grooves.ts`
-(`x` hit, `X` accent, `g` ghost, `-` rest).
-
-**Add a bass groove / piano style / violin style:** `bassStyles.ts`, `pianoStyles.ts`,
-`violinStyles.ts` in each instrument folder.
-
-**Change a sound:** guitar tone is `ACOUSTIC` in `GuitarInstrument.ts`, bass is `PROFILES` in
-`BassInstrument.ts`, drums are in `audio/synth/drums.ts`.
-
-## Adding a new instrument
-
-1. Create `src/instruments/trumpet/TrumpetInstrument.ts`.
-2. Extend `ChordInstrument` (if it follows chords) or `Instrument`, and implement:
+One folder and one line. Extend the base class, then register it:
 
 ```ts
-export class TrumpetInstrument extends ChordInstrument<TrumpetAutomation, TrumpetSettings> {
+export class TrumpetInstrument extends ChordInstrument<TrumpetLoop, TrumpetSettings> {
   readonly id = 'trumpet';
   readonly name = 'Trumpet';
   readonly color = '#ff8a3d';
   readonly blurb = 'Brass that cuts through the mix';
 
-  protected buildAudio() { /* create synth nodes, connect to this.channel.input */ }
-  defaultSettings() { return { mute: false }; }
-  defaultAutomation() { return { progression: { slots: [] }, style: 'stabs' }; }
-  roomArt() { return `<svg viewBox="0 0 200 200" fill="none" stroke="currentColor">…</svg>`; }
-
-  previewChord(chord: Chord) { /* play it once */ }
-  scheduleStep(localStep: number, time: number, stepDuration: number) { /* loop playback */ }
-
-  mountStage(host: Host) { /* the big playable instrument */ }
-  mountPlayPanel(host: Host) { /* sidebar Play tab */ }
-  mountAutoPanel(host: Host, draft: Draft<TrumpetAutomation>) {
-    this.mountProgressionSection(host, draft); // free chord-progression editor
-    /* plus your style controls */
+  scheduleStep(localStep: number, time: number) {
+    const pos = this.loopChord(localStep); // which chord is playing right now
+    // schedule notes at `time`...
   }
+  // + mountStage, mountPlayPanel, mountAutoPanel, roomArt, previewChord
 }
 ```
 
-3. Add it to `BAND` in `src/instruments/registry.ts`.
-
-It now appears in the room, gets a mixer channel and a loop, and is included in save files.
-Old saves keep working because `mergeSong` fills in defaults for anything missing.
-
-## Toward multiplayer
-
-The architecture is ready for it:
-
-- All song changes are serializable `Action`s. Add a middleware that sends them to a server
-  and applies incoming ones with `store.apply` (which skips middleware, avoiding echo loops):
-
 ```ts
-store.use((action, next) => {
-  socket.send(JSON.stringify(action)); // share with the room
-  next(action);                         // apply locally
-});
-socket.onmessage = (e) => store.apply(JSON.parse(e.data));
+// src/instruments/registry.ts
+export const BAND = [GuitarInstrument, BassInstrument, DrumsInstrument, PianoInstrument, ViolinInstrument, TrumpetInstrument];
 ```
 
-- Live hand-played notes go straight to the instruments, not through the store. To share
-  those, send small `{ instrument, method, args }` messages and call the same methods on
-  the other side.
-- For shared timing, have one player host the tempo and broadcast the bar number; others
-  align their `Transport` to it.
-- A good server to start with: a small Node WebSocket server, or a hosted realtime service.
+It instantly gets a spot on stage, a mixer channel, a loop builder with the chord-progression editor, and a place in save files.
 
-## Notes
+<br/>
 
-- Browsers only allow sound after a click, which is why the first screen has a button.
-- Song data is saved under `localStorage['neon-band/song-v1']`.
-- Fonts load from Google Fonts; offline it falls back to system fonts.
+## 📱 Works on your phone too
+
+<img src="docs/screenshots/mobile.png" alt="Neon Band on a phone" width="260" align="right"/>
+
+The layout adapts down to phone size. Instruments keep a playable size and scroll sideways instead of shrinking into tiny targets. Touch, multi-touch and drag-strumming all work.
+
+Songs autosave in your browser, and the **Song** menu lets you copy, download or load any song as JSON.
+
+<br clear="right"/>
+
+## 🗺️ Roadmap
+
+- [ ] **Multiplayer jam rooms** — the action system and store middleware are already in place
+- [ ] Recorded samples as an optional upgrade, instrument by instrument
+- [ ] Song sections (verse / chorus / bridge) and arrangement
+- [ ] Undo and redo
+- [ ] More instruments: trumpet, sax, synth pads
+- [ ] Export your song as a WAV file
+
+<br/>
