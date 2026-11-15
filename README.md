@@ -13,7 +13,7 @@ and stack them into a song — all in a neon-lit room, all synthesized live in c
 
 <br/>
 
-[![Deploy](https://github.com/YOUR-USERNAME/neon-band/actions/workflows/deploy.yml/badge.svg)](https://github.com/YOUR-USERNAME/neon-band/actions/workflows/deploy.yml)
+[![Deploy](https://github.com/NancyAanchal/neon-band/actions/workflows/deploy.yml/badge.svg)](https://github.com/NancyAanchal/neon-band/actions/workflows/deploy.yml)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)
 ![Web Audio API](https://img.shields.io/badge/Web_Audio-API-2ee6ff)
@@ -119,7 +119,7 @@ flowchart LR
 ## 🚀 Quick start
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/neon-band.git
+git clone https://github.com/NancyAanchal/neon-band.git
 cd neon-band
 npm install
 npm run dev
