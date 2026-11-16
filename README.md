@@ -32,13 +32,11 @@ and stack them into a song — all in a neon-lit room, all synthesized live in c
 
 ## ✨ Why it's cool
 
-- 🎼 **Pitch-perfect by math, not samples.** Every note is computed in equal temperament (A4 = 440 Hz). Guitar strings are measured within **0.28 cents** of perfect pitch; you can't hear under ~5.
-- 🎸 **Every chord, every key.** 16 chord types × 12 keys = **192 chords**, and the guitar finds a real, playable fingering for every one of them, with a working **capo**.
-- 🥁 **Tight as a studio clock.** A lookahead scheduler books every note ahead of time at sample-accurate audio times, so five instruments stay locked together even when the UI is busy.
-- 🔁 **Loops land on the beat.** Send a loop to the band mid-song and it waits for the next bar line, so it always comes in on beat one.
-- 🎹 **Plays like the real thing.** Strums ring string by string. Pianos voice-lead smoothly between chords. The violin is fretless: slide your finger and the pitch slides with you, with a live tuner.
-- 🧩 **Built to grow.** Adding an instrument is one folder plus one line. Every song change is a plain serializable action, ready for multiplayer.
-- 📦 **Tiny.** No frameworks, no runtime dependencies, no audio files. The whole game ships as ~33 KB of gzipped JavaScript.
+- 🎼 **Pitch-perfect by math.**
+- 🎸 **Every chord, every key.** 
+- 🥁 **Tight as a studio clock.** 
+- 🔁 **Loops land on the beat.**
+- 🎹 **Plays like the real thing.** 
 
 <br/>
 
